@@ -15,7 +15,9 @@ namespace LibraryManagementSystem.BLL.DTOs.AuthDTOs
         public string FacultyGraduation { get; set; }
         public string? ImageUrl { get; set; }
         public int DepartmentId { get; set; }
+        public string? deptName { get; set; }
         public string PhoneNumber { get; set; }
+
 
 
     }

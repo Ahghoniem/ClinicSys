@@ -86,8 +86,8 @@ namespace LibraryManagementSystem.BLL.Services
 
                     FacultyGraduation = d.GraduationFaculty,
                     ImageUrl = d.ImageUrl,
-                    DepartmentId = d.DepID
-
+                    DepartmentId = d.DepID,
+                    deptName = d.Department.DepName
 
                 })
                 .ToListAsync();
@@ -110,7 +110,8 @@ namespace LibraryManagementSystem.BLL.Services
                    
                    FacultyGraduation=d.GraduationFaculty,
                    ImageUrl = d.ImageUrl,
-                   DepartmentId = d.DepID
+                   DepartmentId = d.DepID,
+                   deptName=d.Department.DepName
 
                 })
                 .FirstOrDefaultAsync();
@@ -153,7 +154,8 @@ namespace LibraryManagementSystem.BLL.Services
                     Email = d.Email,
                     FacultyGraduation = d.GraduationFaculty,
                     ImageUrl = d.ImageUrl,
-                    DepartmentId = d.DepID
+                    DepartmentId = d.DepID,
+                    deptName=d.Department.DepName
                 })
                 .ToListAsync();
 

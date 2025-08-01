@@ -23,7 +23,9 @@ namespace LinkDev.Talabat.Core.Application.Mapping
             CreateMap<ProductBrand, BrandDTO>();
             CreateMap<ProductCategory, CategoryDTO>();
             CreateMap<Doctor, DoctorDto>().ReverseMap();
-            CreateMap<Admin, AdminDto>().ReverseMap();
+            CreateMap<Admin, AdminDto>()
+                .ForMember(dest => dest.DeptName, opt => opt.MapFrom(src => src.Department!.DepName))
+                .ReverseMap();
             CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
             CreateMap<AddDepartmentDTO, Department>()
             .ForMember(dest => dest.DepName, opt => opt.MapFrom(src => src.Name)) // Mapping Name
