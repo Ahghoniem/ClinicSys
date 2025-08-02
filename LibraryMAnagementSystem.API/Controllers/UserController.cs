@@ -63,7 +63,7 @@ namespace LibraryManagementSystem.BLL.DTOs.AuthDTOs
         }
 
         [HttpPut("UpdateImageUrl")]
-        public async Task<IActionResult> UpdateImageUrl([FromBody] UpdateImageUrlDto model)
+        public async Task<IActionResult> UpdateImageUrl([FromForm] UpdateImageUrlDto model)
         {
             if (!ModelState.IsValid)
             {

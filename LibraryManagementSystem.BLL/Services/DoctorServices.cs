@@ -34,11 +34,21 @@ namespace LibraryManagementSystem.BLL.Services
         {
             var dept = await _unitOfWork.GetRepository<Department>().GetByIdAsync(doctorDto.DepID);
             if (dept == null)
-            {
-                var errors = string.Join(", ", "Department NotFound");
-                throw new Exception($"User creation failed: {errors}");
+                throw new Exception("User creation failed: Department NotFound");
 
+            // Save image
+            var imageName = $"{Guid.NewGuid()}_{doctorDto.ImageUrl.FileName}";
+            var uploadPath = Path.Combine("wwwroot", "uploads", "doctors");
+
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            var filePath = Path.Combine(uploadPath, imageName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await doctorDto.ImageUrl.CopyToAsync(stream);
             }
+
             var doctor = new Doctor
             {
                 UserName = doctorDto.Email,
@@ -46,8 +56,8 @@ namespace LibraryManagementSystem.BLL.Services
                 FullName = doctorDto.FullName,
                 DepID = doctorDto.DepID,
                 UserType = 3,
-                GraduationFaculty=doctorDto.FacultyGraduation,
-                ImageUrl = doctorDto.ImageUrl,   
+                GraduationFaculty = doctorDto.FacultyGraduation,
+                ImageUrl = $"uploads/doctors/{imageName}"
             };
 
             var result = await _userManager.CreateAsync(doctor, $"@{doctorDto.FullName}123@");
@@ -60,7 +70,6 @@ namespace LibraryManagementSystem.BLL.Services
 
             return true;
         }
-
 
 
         public async Task<bool> DeleteAsync(string id)
@@ -78,46 +87,24 @@ namespace LibraryManagementSystem.BLL.Services
             var doctors = await _context.Users
                 .OfType<Doctor>()
                 .Include(d => d.Department)
-                .Select(d => new DoctorDto
-                {
-                    Id = d.Id,
-                    FullName = d.FullName,
-                    Email = d.Email,
-
-                    FacultyGraduation = d.GraduationFaculty,
-                    ImageUrl = d.ImageUrl,
-                    DepartmentId = d.DepID,
-                    deptName = d.Department.DepName
-
-                })
                 .ToListAsync();
 
-            return doctors;
+            return _mapper.Map<IEnumerable<DoctorDto>>(doctors);
         }
-
 
         public async Task<DoctorDto?> GetByIdAsync(string id)
         {
             var doctor = await _context.Users
                 .OfType<Doctor>()
                 .Include(d => d.Department)
-                .Where(d => d.Id == id)
-                .Select(d => new DoctorDto
-                {
-                    Id = d.Id,
-                    FullName = d.FullName,
-                    Email = d.Email,
-                   
-                   FacultyGraduation=d.GraduationFaculty,
-                   ImageUrl = d.ImageUrl,
-                   DepartmentId = d.DepID,
-                   deptName=d.Department.DepName
+                .FirstOrDefaultAsync(d => d.Id == id);
 
-                })
-                .FirstOrDefaultAsync();
+            if (doctor == null)
+                return null;
 
-            return doctor;
+            return _mapper.Map<DoctorDto>(doctor);
         }
+
 
 
         public async Task<bool> UpdateAsync(DoctorDto doctorDto)

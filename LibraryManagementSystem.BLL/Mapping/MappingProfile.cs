@@ -22,7 +22,15 @@ namespace LinkDev.Talabat.Core.Application.Mapping
 
             CreateMap<ProductBrand, BrandDTO>();
             CreateMap<ProductCategory, CategoryDTO>();
-            CreateMap<Doctor, DoctorDto>().ReverseMap();
+            CreateMap<Doctor, DoctorDto>()
+                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
+                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                 .ForMember(dest => dest.FacultyGraduation, opt => opt.MapFrom(src => src.GraduationFaculty))
+                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom<DoctorPictureUrlResolver>())
+                 .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => src.DepID))
+                 .ForMember(dest => dest.deptName, opt => opt.MapFrom(src => src.Department!.DepName))
+                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
+
             CreateMap<Admin, AdminDto>()
                 .ForMember(dest => dest.DeptName, opt => opt.MapFrom(src => src.Department!.DepName))
                 .ReverseMap();
