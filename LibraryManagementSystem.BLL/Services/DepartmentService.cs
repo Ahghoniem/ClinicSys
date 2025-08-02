@@ -38,11 +38,31 @@ namespace LibraryManagementSystem.BLL.Servicesm
             if (departmentDto == null)
                 throw new ArgumentNullException(nameof(departmentDto));
 
-            var department = mapper.Map<Department>(departmentDto);
+            // Save image to wwwroot/uploads/departments
+            string imageName = $"{Guid.NewGuid()}_{departmentDto.ImageUrl.FileName}";
+            string uploadPath = Path.Combine("wwwroot", "uploads", "departments");
+
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            string filePath = Path.Combine(uploadPath, imageName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await departmentDto.ImageUrl.CopyToAsync(stream);
+            }
+
+            // Create Department entity
+            var department = new Department
+            {
+                DepName = departmentDto.Name,
+                DepDescription = departmentDto.Dec,
+                ImageUrl = $"uploads/departments/{imageName}"  // Save relative path only
+            };
 
             await unitOfWork.GetRepository<Department>().AddAsync(department);
             return await unitOfWork.SaveAsync();
         }
+
 
         public async Task<DepartmentDTO> UpdateDepartmentAsync(EditDepartmentDTO departmentDto)
         {

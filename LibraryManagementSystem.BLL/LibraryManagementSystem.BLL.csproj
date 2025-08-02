@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LibraryManagementSystem.DAL\LibraryManagementSystem.DAL.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>

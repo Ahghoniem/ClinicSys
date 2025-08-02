@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibraryManagementSystem.BLL.DTOs.ProductDTOs
 {
-    public class ProductToReturnDTO
+    public class    ProductToReturnDTO
     {
         public int Id { get; set; }
         public required string Name { get; set; }

@@ -35,7 +35,7 @@ namespace LibraryManagementSystem.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] AddDepartmentDTO dto)
+        public async Task<IActionResult> Create([FromForm] AddDepartmentDTO dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new ApiResponse<object>(dto, "Failed", 400));

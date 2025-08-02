@@ -29,11 +29,15 @@ namespace LinkDev.Talabat.Core.Application.Mapping
             CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
             CreateMap<AddDepartmentDTO, Department>()
             .ForMember(dest => dest.DepName, opt => opt.MapFrom(src => src.Name)) // Mapping Name
-            .ForMember(dest => dest.DepDescription, opt => opt.MapFrom(src => src.Dec)); 
+            .ForMember(dest => dest.DepDescription, opt => opt.MapFrom(src => src.Dec));
+
 
             CreateMap<Department, DepartmentDTO>()
-                       .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.DepName))  // Ensure correct mapping
-                       .ForMember(dest => dest.Desc, opt => opt.MapFrom(src => src.DepDescription));
+      .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.DepName))
+      .ForMember(dest => dest.Desc, opt => opt.MapFrom(src => src.DepDescription))
+      .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom<DepartmentPictureUrlResolver>());
+
+
             CreateMap<EditDepartmentDTO, Department>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.DepName, opt => opt.MapFrom(src => src.Name))
