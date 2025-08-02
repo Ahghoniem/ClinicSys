@@ -14,5 +14,8 @@ namespace LibraryManagementSystem.DAL.Entities
         [Required]
         public required string DepDescription { get; set; }
 
+        public string? ImageUrl { get; set; }
+
+
     }
 }

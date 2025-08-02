@@ -18,5 +18,8 @@ namespace LibraryManagementSystem.BLL.DTOs
         [Required(ErrorMessage = "Department Description is required.")]
         [StringLength(100, ErrorMessage = "Department Description can't be longer than 100 characters.")]
         public string Desc { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "ImageUrl is required.")]
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }
