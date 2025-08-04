@@ -1,15 +1,15 @@
 ﻿using AutoMapper;
+using LibraryManagementSystem.BLL.DTOs;
 using LibraryManagementSystem.BLL.DTOs.AuthDTOs;
 using LibraryManagementSystem.BLL.ServicesContracts;
 using LibraryManagementSystem.DAL.DbContext;
-using LibraryManagementSystem.DAL.Entities.IdentityEntities;
 using LibraryManagementSystem.DAL.Entities;
+using LibraryManagementSystem.DAL.Entities.IdentityEntities;
+using LibraryManagementSystem.DAL.Migrations;
 using LibraryManagementSystem.DAL.UOW;
 using Microsoft.AspNetCore.Identity;
-
 using Microsoft.EntityFrameworkCore;
-using LibraryManagementSystem.BLL.DTOs;
-using LibraryManagementSystem.DAL.Migrations;
+using System.Numerics;
 
 namespace LibraryManagementSystem.BLL.Services
 {
@@ -36,6 +36,18 @@ namespace LibraryManagementSystem.BLL.Services
                 throw new Exception($"User creation failed: {errors}");
 
             }
+            var imageName = $"{Guid.NewGuid()}_{doctorDto.ImageUrl.FileName}";
+            var uploadPath = Path.Combine("wwwroot", "uploads", "admins");
+
+            if (!Directory.Exists(uploadPath))
+                Directory.CreateDirectory(uploadPath);
+
+            var filePath = Path.Combine(uploadPath, imageName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await doctorDto.ImageUrl.CopyToAsync(stream);
+            }
+
             var doctor = new Admin
             {
                 UserName = doctorDto.Email,
@@ -44,6 +56,8 @@ namespace LibraryManagementSystem.BLL.Services
                 DepID = doctorDto.DepID,
                 UserType = 2,
                 PhoneNumber = doctorDto.PhoneNumber,
+                ImageUrl = $"uploads/admins/{imageName}"
+
             };
 
             var result = await _userManager.CreateAsync(doctor, $"@{doctorDto.FullName}123@");
@@ -103,11 +117,17 @@ namespace LibraryManagementSystem.BLL.Services
 
         public async Task<AdminDto> GetByIdAsync(string id)
         {
+           
+
             var doctor = await _context.Users
                 .OfType<Admin>()
+                .Include(d => d.Department)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
-            return doctor == null ? null : _mapper.Map<AdminDto>(doctor);
+            if (doctor == null)
+                return null;
+
+            return _mapper.Map<AdminDto>(doctor);
         }
 
         public async Task<bool> ReplaceDoctor(ReplaceDoctorDTO replaceDoctorDTO)
@@ -159,7 +179,7 @@ namespace LibraryManagementSystem.BLL.Services
 
         public async Task<bool> UpdateAsync(AdminDto doctorDto)
         {
-            var dept = await _unitOfWork.GetRepository<Department>().GetByIdAsync(doctorDto.DepID);
+            var dept = await _unitOfWork.GetRepository<Department>().GetByIdAsync(doctorDto.DepartmentId);
             if (dept == null)
             {
                 var errors = string.Join(", ", "Department NotFound");
@@ -171,7 +191,7 @@ namespace LibraryManagementSystem.BLL.Services
             doctor.FullName = doctorDto.FullName;
             doctor.Email = doctorDto.Email;
             doctor.UserName = doctorDto.Email;
-            doctor.DepID = doctorDto.DepID;
+            doctor.DepID = doctorDto.DepartmentId;
 
             _context.Users.Update(doctor);
             await _context.SaveChangesAsync();

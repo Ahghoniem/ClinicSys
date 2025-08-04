@@ -10,5 +10,7 @@ namespace LibraryManagementSystem.DAL.Entities.IdentityEntities
     {
         public int DepID { get; set; }
         public Department Department { get; set; }
+        public string? ImageUrl { get; set; }
+
     }
 }

@@ -30,10 +30,17 @@ namespace LinkDev.Talabat.Core.Application.Mapping
                  .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => src.DepID))
                  .ForMember(dest => dest.deptName, opt => opt.MapFrom(src => src.Department!.DepName))
                  .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
-
             CreateMap<Admin, AdminDto>()
-                .ForMember(dest => dest.DeptName, opt => opt.MapFrom(src => src.Department!.DepName))
-                .ReverseMap();
+                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName))
+                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                 .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom<AdminPictureUrlResolver>())
+                 .ForMember(dest => dest.DepartmentId, opt => opt.MapFrom(src => src.DepID))
+                 .ForMember(dest => dest.deptName, opt => opt.MapFrom(src => src.Department!.DepName))
+                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
+
+            //CreateMap<Admin, AdminDto>()
+            //    .ForMember(dest => dest.DeptName, opt => opt.MapFrom(src => src.Department!.DepName))
+            //    .ReverseMap();
             CreateMap<ApplicationUser, ApplicationUserDto>().ReverseMap();
             CreateMap<AddDepartmentDTO, Department>()
             .ForMember(dest => dest.DepName, opt => opt.MapFrom(src => src.Name)) // Mapping Name

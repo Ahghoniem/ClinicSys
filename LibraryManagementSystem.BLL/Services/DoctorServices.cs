@@ -134,20 +134,11 @@ namespace LibraryManagementSystem.BLL.Services
                 .OfType<Doctor>()
                 .Include(d => d.Department)
                 .Where(d => d.DepID == departmentId)
-                .Select(d => new DoctorDto
-                {
-                    Id = d.Id,
-                    FullName = d.FullName,
-                    Email = d.Email,
-                    FacultyGraduation = d.GraduationFaculty,
-                    ImageUrl = d.ImageUrl,
-                    DepartmentId = d.DepID,
-                    deptName=d.Department.DepName
-                })
                 .ToListAsync();
 
-            return doctors;
+            return _mapper.Map<IEnumerable<DoctorDto>>(doctors);
         }
+
         public async Task<int> CountByDepartmentIdAsync(int departmentId)
         {
             return await _context.Users

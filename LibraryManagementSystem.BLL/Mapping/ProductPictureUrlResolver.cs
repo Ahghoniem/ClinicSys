@@ -52,5 +52,19 @@ namespace LinkDev.Talabat.Core.Application.Mapping
         }
     }
 
+    internal class AdminPictureUrlResolver(IConfiguration configuration)
+: IValueResolver<Admin, AdminDto, string?>
+    {
+        public string? Resolve(Admin source, AdminDto destination, string? destMember, ResolutionContext context)
+        {
+            if (!string.IsNullOrEmpty(source.ImageUrl))
+            {
+                return $"{configuration["Urls:ApiBaseURl"]}/{source.ImageUrl}";
+            }
+
+            return string.Empty;
+        }
+    }
+
 
 }

@@ -35,7 +35,7 @@ namespace LibraryMAnagementSystem.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] AddAdminDto doctorDto)
+        public async Task<IActionResult> Create([FromForm] AddAdminDto doctorDto)
         {
             if (!ModelState.IsValid)
             {

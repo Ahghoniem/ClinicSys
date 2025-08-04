@@ -11,8 +11,9 @@ namespace LibraryManagementSystem.BLL.DTOs.AuthDTOs
         public string Id { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
-        public int DepID { get; set; }
-        public string DeptName { get; set; }
+        public string? ImageUrl { get; set; }   
+        public int DepartmentId { get; set; }
+        public string? deptName { get; set; }
         public string PhoneNumber { get; set; }
 
     }
