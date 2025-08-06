@@ -34,7 +34,7 @@ namespace LibraryMAnagementSystem.API
             {
                 options.AddPolicy("AllowAngularClient", builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000") // your Angular app's origin
+                    builder.WithOrigins("http://localhost:5173") // your Angular app's origin
                            .AllowAnyHeader()
                            .AllowAnyMethod()
                            .AllowCredentials(); // allow credentials like cookies or tokens
